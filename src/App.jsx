@@ -9,7 +9,7 @@ function App() {
     <div className=''>
     <div className="absolute inset-0 -z-10  [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
       <Navbar />
-      <div className='min-h-[86vh]'>
+      <div className='min-h-[84vh]'>
       <Manager />
       </div>
       <Footer />

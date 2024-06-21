@@ -9,6 +9,7 @@ const Manager = () => {
     const passwordRef = useRef(null);
     const [form, setForm] = useState({ site: "", username: "", password: "" });
     const [passwordArray, setPasswordArray] = useState([]);
+    const [editId, setEditId] = useState(null);
 
     const showPassword = () => {
         setPasswordVisible(!passwordVisible);
@@ -35,63 +36,87 @@ const Manager = () => {
 
     const PasswordSave = async () => {
         const { site, username, password } = form;
-        const isDuplicate = passwordArray.some(item =>
-            item.site === site && item.username === username && item.password === password
-        );
-
-        if (isDuplicate) {
-            toast.error('Error: Password already saved🤦‍♂️');
-            return;
-        }
-
         if (site.length > 3 && username.length > 3 && password.length > 3) {
-            const newPasswordEntry = { ...form, id: uuidv4() };
-            const updatedPasswordArray = [...passwordArray, newPasswordEntry];
-            setPasswordArray(updatedPasswordArray);
-            await fetch("http://localhost:3000/", {
-                method: "POST", headers: { "Content-type": "application/json" },
-                body: JSON.stringify(newPasswordEntry)
-            })
+            if (editId) {
+                const updatedPasswordArray = passwordArray.map(item =>
+                    item.id === editId ? { ...form, id: editId } : item
+                );
+                try {
+                    // Update backend
+                    await fetch(`http://localhost:3000/${editId}`, {
+                        method: "PUT",
+                        headers: { "Content-type": "application/json" },
+                        body: JSON.stringify({ ...form, id: editId })
+                    });
 
-            setForm({ site: "", username: "", password: "" });
-            toast.success('Password saved successfully');
+                    // Update state and toast
+                    setPasswordArray(updatedPasswordArray);
+                    toast.success('Password updated successfully');
+                    setEditId(null);
+                    setForm({ site: "", username: "", password: "" });
+                } catch (error) {
+                    console.error('Failed to update password:', error);
+                    toast.error('Failed to update password');
+                }
+            } else {
+                // If adding a new entry
+                const newPasswordEntry = { ...form, id: uuidv4() };
+                try {
+                    // Save to backend
+                    await fetch("http://localhost:3000/", {
+                        method: "POST",
+                        headers: { "Content-type": "application/json" },
+                        body: JSON.stringify(newPasswordEntry)
+                    });
+
+                    // Update state and toast
+                    const updatedPasswordArray = [...passwordArray, newPasswordEntry];
+                    setPasswordArray(updatedPasswordArray);
+                    toast.success('Password saved successfully');
+                    setForm({ site: "", username: "", password: "" });
+                } catch (error) {
+                    console.error('Failed to save password:', error);
+                    toast.error('Failed to save password');
+                }
+            }
         } else {
             toast.error('Error: Invalid input lengths');
         }
     }
 
+
     const PasswordDelete = async (id, showToast = true) => {
         console.log("Deleting password with id", id);
-        let confirmDelete = confirm("Do you really want to delete this password?");
+        let confirmDelete = window.confirm("Do you really want to delete this password?");
         if (confirmDelete) {
-            const updatedPasswordArray = passwordArray.filter(item => item.id !== id);
-            setPasswordArray(updatedPasswordArray);
-
             try {
-                let res = await fetch(`http://localhost:3000/${id}`, {
+                // Delete from backend
+                await fetch(`http://localhost:3000/${id}`, {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json" }
                 });
 
-                if (res.ok) {
-                    if (showToast) {
-                        toast.success('Password deleted');
-                    }
-                } else {
-                    const errorData = await res.json();
-                    toast.error(`Error: ${errorData.error}`);
+                // Update state and toast
+                const updatedPasswordArray = passwordArray.filter(item => item.id !== id);
+                setPasswordArray(updatedPasswordArray);
+                if (showToast) {
+                    toast.success('Password deleted');
                 }
             } catch (error) {
-                console.error('Failed to fetch', error);
-                toast.error('Failed to connect to the server');
+                console.error('Failed to delete password:', error);
+                toast.error('Failed to delete password');
             }
         }
     };
+
 
     const PasswordEdit = (id) => {
         const passwordToEdit = passwordArray.find(item => item.id === id);
         if (passwordToEdit) {
             setForm({ site: passwordToEdit.site, username: passwordToEdit.username, password: passwordToEdit.password });
+            setEditId(id);
+            const updatedPasswordArray = passwordArray.filter(item => item.id !== id);
+            setPasswordArray(updatedPasswordArray);
             toast.info('Password ready to be edited');
         }
     }
