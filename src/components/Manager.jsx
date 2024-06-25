@@ -140,7 +140,7 @@ const Manager = () => {
                 theme="light"
             />
 
-            <div className='p-2 md:p-0 md:mycontainer text-white rounded-lg'>
+            <div className='p-2 md:p-0 md:mycontainer rounded-lg'>
                 <h1 className='text-4xl font-bold text-center'>
                     <span className='text-green-500'>&lt;</span>
                     Pass<span className='text-green-500'>OP/&gt;</span>
@@ -178,25 +178,24 @@ const Manager = () => {
 
                     {passwordArray.length === 0 && <div className="text-white">No passwords to show</div>}
                     {passwordArray.length !== 0 &&
-                        <table className="table-auto w-full text-white rounded-md overflow-hidden">
+                        <table className="table-auto w-full rounded-md overflow-hidden pb-5">
                             <thead className="bg-green-800">
-                                <tr>
+                                <tr className="text-white">
                                     <th className="py-2">Site</th>
                                     <th className="py-2">Username</th>
                                     <th className="py-2">Password</th>
                                     <th className="py-2">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="bg-green-100 pb-1">
                                 {passwordArray.map((item, index) => (
                                     <tr key={index}>
                                         <td className="py-2 text-center">
                                             <div className="md:flex justify-center items-center">
                                                 <span>{item.site}</span>
-                                                <div className="lordiconcopy size-7 cursor-pointer text-white" onClick={() => { copyText(item.site) }}>
+                                                <div className="lordiconcopy size-7 cursor-pointe" onClick={() => { copyText(item.site) }}>
                                                     <lord-icon
                                                         style={{ "height": "25px", "width": "25px", "marginLeft": "10px" }}
-                                                        colors="primary:#fff"
                                                         src="https://cdn.lordicon.com/depeqmsz.json"
                                                         trigger="hover">
                                                     </lord-icon>
@@ -204,12 +203,11 @@ const Manager = () => {
                                             </div>
                                         </td>
                                         <td className="py-2 text-center">
-                                            <div className="md:flex justify-center items-center">
+                                            <div className="md:flex justify-center items-center ">
                                                 <span>{item.username}</span>
                                                 <div className="lordiconcopy size-7 cursor-pointer text-white" onClick={() => { copyText(item.username) }}>
                                                     <lord-icon
                                                         style={{ "height": "25px", "width": "25px", "marginLeft": "10px" }}
-                                                        colors="primary:#fff"
                                                         src="https://cdn.lordicon.com/depeqmsz.json"
                                                         trigger="hover">
                                                     </lord-icon>
@@ -222,7 +220,6 @@ const Manager = () => {
                                                 <div className="lordiconcopy size-7 cursor-pointer text-white" onClick={() => { copyText(item.password) }}>
                                                     <lord-icon
                                                         style={{ "height": "25px", "width": "25px", "marginLeft": "10px" }}
-                                                        colors="primary:#fff"
                                                         src="https://cdn.lordicon.com/depeqmsz.json"
                                                         trigger="hover">
                                                     </lord-icon>
@@ -235,7 +232,6 @@ const Manager = () => {
                                                     <lord-icon
                                                         src="https://cdn.lordicon.com/wvdxdmpi.json"
                                                         trigger="hover"
-                                                        colors="primary:#fff"
                                                         style={{ "width": "25px", "height": "25px" }}>
                                                     </lord-icon>
                                                 </span>
@@ -243,7 +239,6 @@ const Manager = () => {
                                                     <lord-icon
                                                         src="https://cdn.lordicon.com/skkahier.json"
                                                         trigger="hover"
-                                                        colors="primary:#fff"
                                                         style={{ "width": "25px", "height": "25px", "marginLeft": "10px" }}>
                                                     </lord-icon>
                                                 </span>
