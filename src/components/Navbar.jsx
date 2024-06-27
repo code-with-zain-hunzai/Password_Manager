@@ -16,7 +16,9 @@ const Navbar = () => {
                 </li>
             </ul> */}
             <button className='github'>
-            <VscGithubInverted className="text-3xl" />
+                <a href="https://github.com/">
+                <VscGithubInverted className="text-3xl" />
+                </a>
             </button>
             </div>
         </nav>
